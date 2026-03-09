@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <!-- OG Meta Tags -->
+        <meta property="og:title" content="OSHEL - Open-Source Hub of Economic Literacy" />
+        <meta property="og:description" content="The Open-Source Hub of Economic Literacy is an educational initiative designed to make economic understanding accessible to everyone." />
+        <meta property="og:image" content="source/images/money-2-1.jpg" />
+
+        <!-- Twitter Card Meta Tags -->
+        <meta property="twitter:title" content="OSHEL - Open-Source Hub of Economic Literacy" />
+        <meta property="twitter:description" content="The Open-Source Hub of Economic Literacy is an educational initiative designed to make economic understanding accessible to everyone." />
+        <meta property="twitter:image" content="source/images/money-2-1.jpg" />
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/png" href="https://oshel-online.github.io/source/images/oshel-icon.png" />
+        <title>OSHEL – Open-Source Hub of Economic Literacy</title>
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, sans-serif;
+            }
+
+            body {
+                background: #0c0f14;
+                color: #ffffff;
+                overflow: hidden;
+            }
+
+            canvas {
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 0;
+            }
+
+            .container {
+                position: relative;
+                z-index: 1;
+                height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                padding: 40px;
+            }
+
+            .content {
+                max-width: 700px;
+                backdrop-filter: blur(6px);
+                background: rgba(0, 0, 0, 0.35);
+                padding: 40px;
+                border-radius: 12px;
+                border: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .content img {
+                width: 80px;
+            }
+
+            h1 {
+                font-size: 42px;
+                letter-spacing: 1px;
+                margin-bottom: 20px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+                line-height: 1.6;
+                opacity: 0.9;
+            }
+
+            .coming-soon {
+                margin-top: 30px;
+                font-size: 18px;
+                font-weight: 600;
+                color: #4e9686;
+                letter-spacing: 1px;
+            }
+
+            .footer {
+                margin-top: 20px;
+                font-size: 12px;
+                opacity: 0.5;
+            }
+
+            a.contact-email {
+                color: #4e9686;
+                text-decoration: none;
+            }
+
+            @media(max-width:600px) {
+                h1 {
+                    font-size: 30px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="bg"></canvas>
+        <div class="container">
+            <div class="content">
+                <img src="https://oshel-online.github.io/source/images/oshel-logo-1.png" alt="OSHEL Logo" />
+                <h1>OSHEL</h1>
+
+                <p class="subtitle">
+                    The <strong>Open-Source Hub of Economic Literacy</strong> is an educational initiative
+                    designed to make economic understanding accessible to everyone.
+                    Through open learning resources structured across age groups,
+                    OSHEL aims to help learners build practical knowledge about money,
+                    markets, and how economies function in everyday life.
+                </p>
+
+                <div class="coming-soon">
+                    Platform Launching Soon
+                </div>
+
+                <div class="footer">
+                    Open Educational Initiative • In Development<br /><a href="mailto:oshel.online@gmail.com" class="contact-email">oshel.online@gmail.com</a>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const canvas = document.getElementById("bg");
+            const ctx = canvas.getContext("2d");
+
+            let particles = [];
+            const particleCount = 90;
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            window.addEventListener("resize", resize);
+            resize();
+
+            class Particle {
+
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+
+                    this.vx = (Math.random() - 0.5) * 0.4;
+                    this.vy = (Math.random() - 0.5) * 0.4;
+
+                    this.size = Math.random() * 2 + 1;
+                }
+
+                move() {
+
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+                }
+
+                draw() {
+
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = "rgba(110,220,255,0.7)";
+                    ctx.fill();
+
+                }
+
+            }
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+
+            function connect() {
+
+                for (let a = 0; a < particles.length; a++) {
+                    for (let b = a; b < particles.length; b++) {
+
+                        let dx = particles[a].x - particles[b].x;
+                        let dy = particles[a].y - particles[b].y;
+
+                        let distance = dx * dx + dy * dy;
+
+                        if (distance < 12000) {
+
+                            ctx.beginPath();
+                            ctx.strokeStyle = "rgba(110,220,255,0.08)";
+                            ctx.lineWidth = 1;
+                            ctx.moveTo(particles[a].x, particles[a].y);
+                            ctx.lineTo(particles[b].x, particles[b].y);
+                            ctx.stroke();
+
+                        }
+                    }
+                }
+
+            }
+
+            function animate() {
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach(p => {
+                    p.move();
+                    p.draw();
+                });
+
+                connect();
+
+                requestAnimationFrame(animate);
+
+            }
+
+            animate();
+        </script>
+    </body>
+
+</html>
